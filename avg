@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+#
+# Mean Average Number Crunch Utility
+# David A. Bell, https://github.com/maxwedge/utils
+#
+#ident  "@(#)avg    1.0    02/11/2011"
+
+$arg=$ARGV[0];
+$count=0;
+$sum=0;
+$mean=0;
+$pipeIn = -t STDIN ? '0' : '1';
+
+if ($arg eq ""){
+    if ($pipeIn eq 0){
+        print "$0 Pipeline utility to crunch lists of numbers\n";
+        print "Takes input from STDIN or command-line (^D to exit)\n";
+        print "No argument prints all fields\n";
+        print "-c prints line count\n";
+        print "-h prints high number\n";
+        print "-l prints low number\n";
+        print "-m prints mean average\n";
+        print "-s prints sum\n\n";
+    }
+}
+
+while(<STDIN>){
+    chop;
+    $num=$_;
+    if ($num ne "") {
+        if ($count eq 0){
+            $high=$num;
+            $low=$num;
+        }
+        $count=$count+1;
+        $sum=$sum+$num;
+        if ($num > $high){
+            $high=$num;
+        }
+        if ($num < $low){
+            $low=$num;
+        }
+    }
+}
+
+if ($count gt 0){
+    $mean=$sum/$count;
+}
+if ($arg eq ""){
+    print "Line count:\t\t$count\n";
+    print "High number:\t\t$high\n";
+    print "Low number:\t\t$low\n";
+    print "Mean average:\t\t$mean\n";
+    print "Sum total:\t\t$sum\n\n";
+}
+
+if ($arg eq "-c"){
+    print "$count\n";
+}
+if ($arg eq "-h"){
+    print "$high\n";
+}
+if ($arg eq "-l"){
+    print "$low\n";
+}
+if ($arg eq "-m"){
+    print "$mean\n";
+}
+if ($arg eq "-s"){
+    print "$sum\n";
+}
+
