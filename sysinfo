@@ -1,0 +1,33 @@
+echo CPUs
+cat /proc/cpuinfo | grep -c processor
+echo _________________________
+echo CPU Speed
+cat /proc/cpuinfo | grep "model name" | head -1
+echo _________________________
+echo DIMMs
+sudo dmidecode -t memory | sed -ne '/Memory Device/,/Part Number/ { /Size:/h; /^[[:space:]]*Locator:/ {p;x;p}; /Speed:/p}' | paste - - - | tr -s '\t' | expand -t 1,20,50
+echo _________________________
+echo Disk
+cat /proc/scsi/sg/device_strs
+echo _________________________
+echo Disks
+sudo fdisk -l | grep -i Disk
+echo _________________________
+echo Hardware
+sudo dmidecode | egrep "Manufacturer|Product Name" | head -2
+echo _________________________
+echo Memory
+grep MemTotal /proc/meminfo
+echo _________________________
+echo RAID
+lspci -vv | grep -i raid
+echo _________________________
+echo "Read Only File System"
+STATUS=`grep "\sro[\s,]" /proc/mounts;echo $?`;if [[ $STATUS == 1 ]]; then echo OK; else echo "Bad Jazz!"; fi
+echo _________________________
+echo Service Tag
+sudo dmidecode | grep "Serial Number:" | head -1
+echo _________________________
+#echo Swap Hogs
+#for file in /proc/*/status ; do echo -n "$file  "; awk '/VmSwap|Name/{printf $2 " " $3}END{ print ""}' $file; done | sort -k 3 -n -r | head -20
+
