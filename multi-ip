@@ -1,0 +1,55 @@
+#!/usr/bin/bash
+#########################################################################
+# Plumb multiple IP addresses on one interface (Solaris)                #
+#                                                                       #
+# Plumb up to 255 IP addresses per interface.                           #
+# Invoke ndd to enable up to 8192 virtual interfaces:                   #
+#   ndd -set /dev/ip ip_addrs_per_if 1025                               #
+#                                                                       #
+# Create an /etc/hostname.IF:N for each interface, where IF=interface   #
+#   type and N=number.                                                  #
+#                                                                       #
+# Called from /etc/rc2.d/S99multi-ip                                    #
+#########################################################################
+#
+#ident  "@(#)multi-ip      0.9    04/02/2005 
+#David A. Bell, https://github.com/maxwedge"
+
+# Loop this bad boy if you have a metric boatload of IPs to configure
+
+INTERFACE1="dmfe0"          ##Set the type of interface (hme0, dmfe0, etc.)
+INTERFACE2="dmfe1"
+IP1="10.0.0.1"          ##Set the IP addresses
+IP2="10.0.0.2"
+IP3="10.0.0.3"
+
+if [ -f /etc/hostname.$INTERFACE1:1 ];
+  then
+    case $1 in              ##Add or delete desired number of interface IPs
+    'start')
+      echo "Bringing up interface $INTERFACE1:1"
+      ifconfig $INTERFACE1:1 $IP1 up
+      echo "Bringing up interface $INTERFACE1:2"
+      ifconfig $INTERFACE1:2 $IP2 up
+      echo "Bringing up interface $INTERFACE1:3"
+      ifconfig $INTERFACE1:3 $IP3 up
+    ;;
+    'stop')
+      echo "Stopping interface $INTERFACE1:1"
+      ifconfig $INTERFACE1:1 $IP1 down
+      echo "Stopping interface $INTERFACE1:2"
+      ifconfig $INTERFACE1:2 $IP2 down
+      echo "Stopping interface $INTERFACE1:3"
+      ifconfig $INTERFACE1:3 $IP3 down
+    ;;
+
+    '')
+      echo
+      echo "Syntax: $0 start|stop"
+      echo
+    esac
+  else
+    echo
+    echo "$0 exiting: /etc/hostname.$INTERFACE1:1 not found!"
+    echo
+fi

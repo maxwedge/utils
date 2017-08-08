@@ -1,0 +1,1 @@
+/usr/platform/`uname -i`/sbin/prtdiag | head -1 | awk ' { print $8 } '
