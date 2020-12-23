@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+
+our $str;
+my @n = split('\.', $ARGV[0]);
+my $oct1 = $n[0];
+my $oct2 = $n[1];
+my $oct3 = $n[2];
+my $oct4 = $n[3];
+
+    dec2roman($oct1);
+    my $ipAddr = $str;
+    dec2roman($oct2);
+    $ipAddr = $ipAddr . "." . $str;
+    dec2roman($oct3);
+    $ipAddr = $ipAddr . "." . $str;
+    dec2roman($oct4);
+    $ipAddr = $ipAddr . "." . $str;
+    print "$ipAddr\n";
+
+    sub dec2roman {
+        my $num = $_[0];
+        if ($num < 1) {
+            $str = "NULLA";
+            return $str;
+        }
+        $str = '';
+        my $C  =  100;
+        my $XC =   90;
+        my $L  =   50;
+        my $XL =   40;
+        my $X  =   10;
+        my $IX =    9;
+        my $V  =    5;
+        my $IV =    4;
+        my $I  =    1;
+        while ($num > 0){
+            if    ($num >= $C)  { $str = $str .  "C"; $num = ($num - $C );}
+            elsif ($num >= $XC) { $str = $str . "XC"; $num = ($num - $XC);}
+            elsif ($num >= $L)  { $str = $str .  "L"; $num = ($num - $L );}
+            elsif ($num >= $XL) { $str = $str . "XL"; $num = ($num - $XL);}
+            elsif ($num >= $X)  { $str = $str .  "X"; $num = ($num - $X );}
+            elsif ($num >= $IX) { $str = $str . "IX"; $num = ($num - $IX);}
+            elsif ($num >= $V)  { $str = $str .  "V"; $num = ($num - $V );}
+            elsif ($num >= $IV) { $str = $str . "IV"; $num = ($num - $IV);}
+            elsif ($num >= $I)  { $str = $str .  "I"; $num = ($num - $I );}
+        }
+        return $str;
+    }
+
